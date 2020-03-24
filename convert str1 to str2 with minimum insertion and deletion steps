@@ -1,0 +1,25 @@
+#include<bits/stdc++.h>
+using namespace std;
+int dp[1002][1002];
+int main()
+{
+    int t;cin>>t;
+    while(t--)
+    {
+        memset(dp,-1,sizeof(dp));
+    int n,m;cin>>n>>m;
+    string x,y;cin>>x>>y;
+    for(int i=0;i<=n;i++)
+    {
+        for(int j=0;j<=m;j++)
+        {
+            if(j==0 || i==0) dp[i][j]=0;
+            else if(x[i-1]==y[j-1]) dp[i][j]=1+dp[i-1][j-1];
+            else dp[i][j]=max(dp[i-1][j],dp[i][j-1]);
+        }
+    }
+        int insert=m-dp[n][m];
+        int delet=n-dp[n][m];
+        cout<<insert+delet<<endl;
+    }
+}
