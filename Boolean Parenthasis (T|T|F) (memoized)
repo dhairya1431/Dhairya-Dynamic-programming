@@ -1,0 +1,69 @@
+#include<bits/stdc++.h>
+using namespace std;
+int dp[100+1][100+1][2];
+int solve(string s,int i,int j,char find)
+{
+    //cout<<find<<" "<<i<<' '<<j<<' ';
+    int p;
+    if(find=='T')  p=1;
+    else  p=0;
+    
+    if(i>j) return 0;
+    
+    if(dp[i][j][p]!=-1) return dp[i][j][p];
+    
+    if(i==j)
+    {
+        if(find==s[i]) { /*cout<<1<<endl;*/return 1;}
+        else {/*cout<<0<<endl;*/return 0;}
+    }
+    
+    //cout<<endl;
+    int ans=0;
+    for(int k=i+1;k<=(j-1);k+=2)
+    {
+        //cout<<i<<' '<<k-1<<"T"<<" ";
+        int lt=solve(s,i,k-1,'T');//cout<<"lt : "<<lt<<endl;
+        
+       // cout<<i<<' '<<k-1<<"F"<<" ";
+        int lf=solve(s,i,k-1,'F');//cout<<"lf : "<<lf<<endl;
+        
+        //cout<<k+1<<' '<<j<<"T"<<" ";
+        int rt=solve(s,k+1,j,'T');//cout<<"rt : "<<rt<<endl;
+        
+        //cout<<k+1<<' '<<j<<"F"<<" ";
+        int rf=solve(s,k+1,j,'F');//cout<<"rf : "<<rf<<endl;
+        
+        if(s[k]=='&')
+        {
+           if(find=='T') ans=ans + lt*rt;
+           else ans=ans + lt*rf + rt*lf + lf*rf;
+          // cout<<find<<' '<<ans<<endl;
+        }
+        else if(s[k]=='|')
+        {
+            if(find=='T') ans=ans+ lt*rt +lt*rf + rt*lf;
+            else ans=ans+ lf*rf;
+            //cout<<find<<' '<<ans<<endl;
+        }
+        else if(s[k]=='^')
+        {
+            if(find=='T') ans=ans+ lt*rf + lf*rt;
+            else ans=ans+ lt*rt +lf*rf;
+            //cout<<find<<' '<<ans<<endl;
+        }
+    }
+    ans=ans%1003;
+    return dp[i][j][p]=ans;
+}
+int main()
+{
+    int t;cin>>t;
+    while(t--)
+    {
+        memset(dp,-1,sizeof(dp));
+        int n;cin>>n;
+        string s;cin>>s;
+        cout<<solve(s,0,n-1,'T')%1003<<endl;
+    }
+}
